@@ -7,16 +7,48 @@ import { a } from '@react-spring/three';
 export default function Island({
   isRotating,
   setIsRotating,
-  setCurrentStage,
-  currentFocusPoint,
   ...props
 }) {
-  console.log('Island component rendered');
   const islandRef = useRef();
   const { gl, viewport } = useThree();
   const { nodes, materials } = useGLTF(islandScene);
 
-  // The rest of your component code remains the same
+  const lastX = useRef(0);
+  const rotationSpeed = useRef(0)
+  const dampingFactor = 0.95
+
+  const handlePointerDown = (e) => {
+    e.stopPropogation()
+    e.preventDefault()
+    setIsRotating(true)
+
+    const clientX = e.touches? e.touches[0].clientX : e.clientX
+
+    lastX.current = clientX
+  }
+
+  const handlePointerUp = (e) => {
+    e.stopPropogation()
+    e.preventDefault()
+    setIsRotating(false)
+
+    const clientX = e.touches? e.touches[0].clientX : e.clientX
+
+    lastX.current = clientX
+
+    const delta = (clientX - lastX.current)/viewport.width
+
+    islandRef.current.rotation.y += delta*0.01*Math.PI
+
+    lastX.current = clientX
+
+    rotationSpeed.current = delta*0.01*Math.PI
+  }
+
+  const handlePointermove = (e) => {
+    e.stopPropogation()
+    e.preventDefault()
+  }
 
   return (
     <a.group ref={islandRef} {...props}>
