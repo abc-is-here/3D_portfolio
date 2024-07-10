@@ -12,7 +12,7 @@ export default function Island({ isRotating, setIsRotating, ...props }) {
   const lastX = useRef(0);
   const rotationSpeed = useRef(0);
   const dampingFactor = 0.95;
-  const [currentStage, setCurrentStage] = useState(null);
+  const [currentStage, setCurrentStage] = useState(0);
 
   const handlePointerDown = (e) => {
     e.stopPropagation();
